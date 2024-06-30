@@ -1,4 +1,3 @@
-
 let transactions = JSON.parse(localStorage.getItem('transactions')) || [];
 let medicinesInventory = JSON.parse(localStorage.getItem('medicinesInventory')) || {};
 
@@ -60,7 +59,6 @@ function displayInventory() {
     const inventoryTableBody = document.getElementById('inventoryTableBody');
     inventoryTableBody.innerHTML = '';
 
-   // Get sorted inventory keys
     const sortedMedicines = Object.keys(medicinesInventory).sort((a, b) => a.localeCompare(b));
 
     sortedMedicines.forEach((medicine, index) => {
@@ -77,13 +75,11 @@ function displayInventory() {
         `;
         inventoryTableBody.appendChild(row);
 
-        // Check if inventory is zero and trigger alert
         if (medicinesInventory[medicine].quantity === 0) {
             alert(`Alert: ${medicine} is out of stock.`);
         }
     });
 }
-
 
 document.getElementById('addTransactionBtn').addEventListener('click', () => {
     const customerName = prompt('Enter customer name:');
@@ -111,15 +107,14 @@ document.getElementById('addTransactionBtn').addEventListener('click', () => {
         };
 
         transactions.push(transaction);
-        medicinesInventory[medicine].quantity -= quantity; // Decrease inventory
+        medicinesInventory[medicine].quantity -= quantity;
         saveDataToLocalStorage();
         displayTransactions();
-        displayInventory(); // Update inventory display
+        displayInventory();
     } else {
         alert('Either medicine not found in inventory or insufficient quantity.');
     }
 });
-
 
 document.getElementById('addMedicineBtn').addEventListener('click', () => {
     const medicineName = document.getElementById('medicineName').value.trim();
@@ -176,14 +171,16 @@ function deleteTransaction(index) {
 }
 
 function editMedicine(medicine) {
-    const newQuantity = parseInt(prompt('Edit quantity for ' + medicine + ':', medicinesInventory[medicine]), 10);
+    const newQuantity = parseInt(prompt('Edit quantity for ' + medicine + ':', medicinesInventory[medicine].quantity), 10);
+    const newBuyingPrice = parseFloat(prompt('Edit buying price for ' + medicine + ':', medicinesInventory[medicine].buyingPrice));
 
-    if (!isNaN(newQuantity)) {
-        medicinesInventory[medicine] = newQuantity;
+    if (!isNaN(newQuantity) && !isNaN(newBuyingPrice)) {
+        medicinesInventory[medicine].quantity = newQuantity;
+        medicinesInventory[medicine].buyingPrice = newBuyingPrice;
         saveDataToLocalStorage();
         displayInventory();
     } else {
-        alert('Please enter a valid quantity.');
+        alert('Please enter a valid quantity and buying price.');
     }
 }
 
@@ -192,7 +189,6 @@ function deleteMedicine(medicine) {
     saveDataToLocalStorage();
     displayInventory();
 }
-
 
 document.getElementById('searchInput').addEventListener('input', function() {
     const searchText = this.value.toLowerCase();
@@ -262,3 +258,4 @@ document.addEventListener('DOMContentLoaded', () => {
     displayTransactions();
     displayInventory();
 });
+
