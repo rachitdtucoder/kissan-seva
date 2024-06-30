@@ -60,7 +60,10 @@ function displayInventory() {
     const inventoryTableBody = document.getElementById('inventoryTableBody');
     inventoryTableBody.innerHTML = '';
 
-    Object.keys(medicinesInventory).forEach((medicine, index) => {
+   // Get sorted inventory keys
+    const sortedMedicines = Object.keys(medicinesInventory).sort((a, b) => a.localeCompare(b));
+
+    sortedMedicines.forEach((medicine, index) => {
         const row = document.createElement('tr');
         row.innerHTML = `
             <td>${index + 1}</td>
